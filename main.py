@@ -1,7 +1,7 @@
 import csv
 import numpy as np
 from flask import Flask, render_template, request
-from pymcdm import vikor, promethee
+from pymcdm.methods import vikor, promethee
 
 app = Flask(__name__)
 

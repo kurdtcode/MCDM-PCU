@@ -7,10 +7,17 @@
     <title>promethee_test</title>
 </head>
 <body>
+    <h1>Welcome to the Project Website</h1>
     <p>Display csv file in html table Flask</p>
     <form method=post enctype=multipart/form-data action="{{ url_for('vikor_result') }}">
         <input type=file accept=".csv" name=csv_file>
-        <input type=submit value=Upload>
+        <input type=submit value="Run Promethee">
+    </form>
+
+    <form action="/vikor" method="post" enctype="multipart/form-data">
+        <h2>Vikor Method</h2>
+        <input type="file" name="csv_file" accept=".csv">
+        <input type="submit" value="Run Vikor">
     </form>
 </body>
 </html>
