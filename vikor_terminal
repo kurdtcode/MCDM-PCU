@@ -1,0 +1,38 @@
+import csv
+import numpy as np
+import pandas as pd
+from flask import Flask, render_template, request
+from pymcdm import methods as mcdm_methods
+from pymcdm import normalizations as norm
+import tempfile
+from tabulate import tabulate
+
+def csv_to_matrix(file):
+    with open(file, 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        header = next(csv_reader)
+        data = list(csv_reader)
+    
+    matrix = np.array(data, dtype=float)
+    
+    return matrix
+
+#print(csv_to_matrix('uploads/sample_sheet.csv'))
+
+def to_vikor():
+    matrix = csv_to_matrix('uploads/sample_sheet.csv')
+    weight = np.array([0.4, 0.2, 0.05, 0.35])
+    criteria = np.array([1, -1, -1, -1])
+    vikor = mcdm_methods.VIKOR()
+    vikor_methods = {
+        'VIKOR': mcdm_methods.VIKOR(),
+        'minmax': mcdm_methods.VIKOR(norm.minmax_normalization),
+        'max': mcdm_methods.VIKOR(norm.max_normalization),
+        'sum': mcdm_methods.VIKOR(norm.sum_normalization)
+    }
+    results = {}
+    for name, function in vikor_methods.items():
+        results[name] = function(matrix, weight, criteria)
+    print(tabulate([[name, *np.round(pref, 2)] for name, pref in results.items()], headers=['Method'] + [f'A{i+1}' for i in range(10)]))
+
+to_vikor()
