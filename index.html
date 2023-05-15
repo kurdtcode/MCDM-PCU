@@ -8,7 +8,7 @@
 </head>
 <body>
     <p>Display csv file in html table Flask</p>
-    <form method=post enctype=multipart/form-data>
+    <form method=post enctype=multipart/form-data action="{{ url_for('vikor_result') }}">
         <input type=file accept=".csv" name=csv_file>
         <input type=submit value=Upload>
     </form>
