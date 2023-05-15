@@ -1,55 +1,59 @@
 import csv
 import numpy as np
+import pandas as pd
+import os
 from flask import Flask, render_template, request
-from pymcdm.methods import vikor, promethee
+from pymcdm import methods as mcdm_methods
+from pymcdm import normalizations as norm
+import tempfile
+from tabulate import tabulate
 
 app = Flask(__name__)
 
-# membaca file CSV
-def read_csv(file_path):
-    with open(file_path, newline='') as csv_file:
-        reader = csv.reader(csv_file)
-        data = []
-        for row in reader:
-            data.append(list(map(float, row)))
-    return np.array(data)
+def csv_to_matrix(file):
+    with open(file, 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        header = next(csv_reader)
+        data = list(csv_reader)
+    matrix = np.array(data, dtype=float)
+    return matrix
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        file = request.files['csv_file']
+        if file:
+            # Simpan file ke tempat temporary, soale nek pake request.file bakal error (minta fileStorage)
+            temp_filepath = os.path.join(tempfile.gettempdir(), file.filename)
+            file.save(temp_filepath)
+            
+            # dibuat model vikor
+            results = to_vikor(temp_filepath)
+            
+            # Yang temporary tadi hapus
+            os.remove(temp_filepath)
+            
+            # hasil di print ke html
+            return render_template('result.html', results=results)
+    
+    # render tempat upload
+    return render_template('upload.html')
 
-@app.route('/vikor', methods=['POST'])
-def vikor_result():
-    # membaca file CSV
-    file = request.files['csv_file']
-    data = read_csv(file)
-
-    # normalisasi matriks keputusan
-    sums = data.sum(axis=0)
-    norm_data = data / sums
-
-    # implementasi Vikor
-    w = np.array([0.3, 0.4, 0.3]) # bobot kriteria
-    S, R = vikor(norm_data, w)
-    return render_template('vikor_result.html', S=S, R=R)
-
-@app.route('/promethee', methods=['POST'])
-def promethee_result():
-    # membaca file CSV
-    file = request.files['csv_file']
-    data = read_csv(file)
-
-    # normalisasi matriks keputusan
-    sums = data.sum(axis=0)
-    norm_data = data / sums
-
-    # implementasi Promethee
-    criteria = ['C1', 'C2', 'C3'] # nama kriteria
-    weights = [0.3, 0.4, 0.3] # bobot kriteria
-    criteria_directions = ['max', 'max', 'max'] # arah preferensi
-    flow = 'dominance' # tipe aliran preferensi
-    P, C = promethee(norm_data, weights, criteria_directions, flow)
-    return render_template('promethee_result.html', P=P, C=C)
+def to_vikor(file):
+    matrix = csv_to_matrix(file)
+    weight = np.array([0.4, 0.2, 0.05, 0.35])
+    criteria = np.array([1, -1, -1, -1])
+    vikor = mcdm_methods.VIKOR()
+    vikor_methods = {
+        'VIKOR': mcdm_methods.VIKOR(),
+        'minmax': mcdm_methods.VIKOR(norm.minmax_normalization),
+        'max': mcdm_methods.VIKOR(norm.max_normalization),
+        'sum': mcdm_methods.VIKOR(norm.sum_normalization)
+    }
+    results = {}
+    for name, function in vikor_methods.items():
+        results[name] = function(matrix, weight, criteria)
+    return results
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
