@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-    <h1>Results</h1>
+    <h1>vikor_results</h1>
     
     <table>
         <thead>
@@ -46,7 +46,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for method, prefs in results.items() %}
+            {% for method, prefs in vikor_results.items() %}
             <tr>
                 <td>{{ method }}</td>
                 {% for pref in prefs %}
@@ -56,5 +56,21 @@
             {% endfor %}
         </tbody>
     </table>
-</body>
+
+    <h1>promethee_results</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>A1</th>
+                <th>A2</th>
+                <th>A3</th>
+                <th>A4</th>
+                <th>A5</th>
+                <!-- Add more table headers if needed -->
+            </tr>
+        </thead>
+    </table>
+</body> 
 </html>

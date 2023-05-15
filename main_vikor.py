@@ -4,6 +4,7 @@ import pandas as pd
 import os
 from flask import Flask, render_template, request
 from pymcdm import methods as mcdm_methods
+from pymcdm.methods import PROMETHEE_II
 from pymcdm import normalizations as norm
 import tempfile
 from tabulate import tabulate
@@ -28,13 +29,15 @@ def upload_file():
             file.save(temp_filepath)
             
             # dibuat model vikor
-            results = to_vikor(temp_filepath)
+            vikor_results = to_vikor(temp_filepath)
+            # promethee_results = to_promethee(temp_filepath)
             
             # Yang temporary tadi hapus
             os.remove(temp_filepath)
             
             # hasil di print ke html
-            return render_template('result.html', results=results)
+            return render_template('result.html', vikor_results=vikor_results)
+        
     
     # render tempat upload
     return render_template('upload.html')
@@ -50,10 +53,22 @@ def to_vikor(file):
         'MAX': mcdm_methods.VIKOR(norm.max_normalization),
         'SUM': mcdm_methods.VIKOR(norm.sum_normalization)
     }
-    results = {}
+    vikor_results = {}
     for name, function in vikor_methods.items():
-        results[name] = function(matrix, weight, criteria)
-    return results
+        vikor_results[name] = function(matrix, weight, criteria)
+    return vikor_results
+
+# def to_promethee(file):
+#     matrix = csv_to_matrix(file)
+#     criteria = np.array([1, -1, -1, -1])
+#     promethee_methods = {
+#         'PROMETHEE II': mcdm_methods.promethee.PROMETHEE_II()
+#     }
+#     promethee_results = {}
+#     for name, method in promethee_methods.items():
+#         rankings = method.compute(matrix, criteria)
+#         promethee_results[name] = rankings
+#     return promethee_results
 
 if __name__ == '__main__':
     app.run()
