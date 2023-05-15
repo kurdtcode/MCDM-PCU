@@ -46,9 +46,9 @@ def to_vikor(file):
     vikor = mcdm_methods.VIKOR()
     vikor_methods = {
         'VIKOR': mcdm_methods.VIKOR(),
-        'minmax': mcdm_methods.VIKOR(norm.minmax_normalization),
-        'max': mcdm_methods.VIKOR(norm.max_normalization),
-        'sum': mcdm_methods.VIKOR(norm.sum_normalization)
+        'MINMAX': mcdm_methods.VIKOR(norm.minmax_normalization),
+        'MAX': mcdm_methods.VIKOR(norm.max_normalization),
+        'SUM': mcdm_methods.VIKOR(norm.sum_normalization)
     }
     results = {}
     for name, function in vikor_methods.items():
