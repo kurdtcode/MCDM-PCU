@@ -7,7 +7,6 @@ from pymcdm import methods as mcdm_methods
 from pymcdm.methods import PROMETHEE_II
 from pymcdm import normalizations as norm
 import tempfile
-from tabulate import tabulate
 
 app = Flask(__name__)
 
@@ -65,7 +64,6 @@ def upload_file():
                 # hasil di print ke html
                 return render_template('result.html', results=promethee_results, name="promethee")
 
-
     # render tempat upload
     return render_template('upload.html')
 
@@ -74,7 +72,6 @@ def to_vikor(file):
     matrix = csv_to_matrix(file)
     weight = np.array([0.4, 0.2, 0.05, 0.35])
     criteria = np.array([1, -1, -1, -1])
-    vikor = mcdm_methods.VIKOR()
     vikor_methods = {
         'VIKOR': mcdm_methods.VIKOR(),
         'MINMAX': mcdm_methods.VIKOR(norm.minmax_normalization),
