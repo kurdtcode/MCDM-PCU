@@ -45,18 +45,26 @@ def upload_file():
 
                 # hasil di print ke html
                 return render_template('result.html', results=vikor_results, name="Vikor")
-            elif(request.form["type"] == "promethee"):
+            elif(request.form["type"] == "topsis"):
                 print("prom")
-                promethee_results = to_promethee(temp_filepath)
-                # promethee_results = to_promethee(temp_filepath)
+                topsis_results = to_topsis(temp_filepath)
 
                 # Yang temporary tadi hapus
                 os.remove(temp_filepath)
 
                 # hasil di print ke html
-                return render_template('result.html', results=promethee_results, name="Promethee")
+                return render_template('result.html', results=topsis_results, name="topsis")
+            
+            elif(request.form["type"] == "promethee"):
+                print("asw")
+                promethee_results = to_promethee(temp_filepath)
 
-            # dibuat model vikor
+                # Yang temporary tadi hapus
+                os.remove(temp_filepath)
+
+                # hasil di print ke html
+                return render_template('result.html', results=promethee_results, name="promethee")
+
 
     # render tempat upload
     return render_template('upload.html')
@@ -79,18 +87,36 @@ def to_vikor(file):
     return vikor_results
 
 
+def to_topsis(file):
+    matrix = csv_to_matrix(file)
+    weight = np.array([0.4, 0.2, 0.05, 0.35])
+    criteria = np.array([1, -1, -1, -1])
+    topsis_methods = {
+        'minmax': mcdm_methods.TOPSIS(norm.minmax_normalization),
+        'max': mcdm_methods.TOPSIS(norm.max_normalization),
+        'sum': mcdm_methods.TOPSIS(norm.sum_normalization),
+        'vector': mcdm_methods.TOPSIS(norm.vector_normalization),
+    }
+    topsis_results = {}
+    for name, function in topsis_methods.items():
+        topsis_results[name] = function(matrix, weight, criteria)
+    return topsis_results
+
 def to_promethee(file):
     matrix = csv_to_matrix(file)
+    weight = np.array([0.4, 0.2, 0.05, 0.35])
     criteria = np.array([1, -1, -1, -1])
+    preference_functions = ['usual', 'vshape', 'ushape', 'level', 'vshape_2']
     promethee_methods = {
-        'PROMETHEE II': mcdm_methods.promethee.PROMETHEE_II()
+        f'{pref}': mcdm_methods.PROMETHEE_II(preference_function=pref)
+        for pref in preference_functions
     }
+    p = np.random.rand(matrix.shape[1]) / 2
+    q = np.random.rand(matrix.shape[1]) / 2 + 0.5
     promethee_results = {}
-    for name, method in promethee_methods.items():
-        rankings = method.compute(matrix, criteria)
-        promethee_results[name] = rankings
+    for name, function in promethee_methods.items():
+        promethee_results[name] = function(matrix, weight, criteria, p=p, q=q)
     return promethee_results
-
 
 if __name__ == '__main__':
     app.run()
