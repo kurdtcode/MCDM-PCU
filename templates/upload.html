@@ -5,8 +5,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>MCDM APP</title>
     <style>
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        td,
+        th {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
@@ -53,6 +65,8 @@
             cursor: pointer;
         }
     </style>
+
+
 </head>
 
 <body>
@@ -70,7 +84,68 @@
                 <input type="submit" value="promethee" name="type">
             </div>
         </form>
+        <div id="table_container"></div>
     </div>
+
+
+
+    <!-- <script>
+        $(document).ready(function () {
+            $('#csv_file').on('change', function () {
+                var file = this.files[0];
+                var reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = function () {
+                    var csv = reader.result;
+                    var rows = csv.split('\n');
+                    var headers = rows[0].split(',');
+                    var table_html = '<table><thead><tr>';
+                    for (var i = 0; i < headers.length; i++) {
+                        table_html += '<th>' + headers[i] + '</th>';
+                    }
+                    table_html += '</tr></thead><tbody>';
+                    for (var j = 1; j < rows.length; j++) {
+                        var cells = rows[j].split(',');
+                        table_html += '<tr>';
+                        for (var k = 0; k < cells.length; k++) {
+                            table_html += '<td>' + cells[k] + '</td>';
+                        }
+                        table_html += '</tr>';
+                    }
+                    table_html += '</tbody></table>';
+                    $('#table_container').html(table_html);
+                };
+            });
+        });
+    </script> -->
+    <script>
+        $(document).ready(function () {
+            $('#csv_file').on('change', function () {
+                var file = this.files[0];
+                var reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = function () {
+                    var csv = reader.result;
+                    var rows = csv.split('\n');
+                    var headers = rows[0].split(',');
+                    var table_html = '<table><tbody>';
+                    table_html += '<tr><th>Data</th>';
+                    table_html += '<th>Weight</th>';
+                    table_html += '<th>cost/Benefit</th></tr>';
+                    for (var i = 0; i < headers.length; i++) {
+                        table_html += '<tr><th>' + headers[i] + '</th>';
+                        table_html += '<th><input type="number" name="angka" placeholder="Input Angka"></th>';
+                        table_html += `<th><div class="custom-control custom-switch">
+  <input type="checkbox" class="custom-control-input" id="customSwitch1">
+  <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+</div></th></tr>`
+                    }
+                    table_html += '</tbody></table>';
+                    $('#table_container').html(table_html);
+                };
+            });
+        });
+    </script>
 </body>
 
 </html>
