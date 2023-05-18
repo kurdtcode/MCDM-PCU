@@ -92,37 +92,6 @@
         <div id="table_container"></div>
     </div>
 
-
-
-    <!-- <script>
-        $(document).ready(function () {
-            $('#csv_file').on('change', function () {
-                var file = this.files[0];
-                var reader = new FileReader();
-                reader.readAsText(file);
-                reader.onload = function () {
-                    var csv = reader.result;
-                    var rows = csv.split('\n');
-                    var headers = rows[0].split(',');
-                    var table_html = '<table><thead><tr>';
-                    for (var i = 0; i < headers.length; i++) {
-                        table_html += '<th>' + headers[i] + '</th>';
-                    }
-                    table_html += '</tr></thead><tbody>';
-                    for (var j = 1; j < rows.length; j++) {
-                        var cells = rows[j].split(',');
-                        table_html += '<tr>';
-                        for (var k = 0; k < cells.length; k++) {
-                            table_html += '<td>' + cells[k] + '</td>';
-                        }
-                        table_html += '</tr>';
-                    }
-                    table_html += '</tbody></table>';
-                    $('#table_container').html(table_html);
-                };
-            });
-        });
-    </script> -->
     <script>
         $(document).ready(function () {
             $('#csv_file').on('change', function () {
@@ -139,15 +108,49 @@
                     table_html += '<th>Cost/Benefit</th></tr>';
                     for (var i = 0; i < headers.length; i++) {
                         table_html += '<tr><th>' + headers[i] + '</th>';
-                        table_html += '<th><input type="number" name="angka" placeholder="Input Angka"></th>';
-                        table_html += `<th><div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                            <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-                          </div></th></tr>`
+                        table_html += '<th><input type="number" name="weights[]" placeholder="Input Angka"></th>';
+                        table_html += '<th><div class="form-check form-switch">';
+                        table_html += '<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="criteria[]" value="1">';
+                        table_html += '<label class="form-check-label" for="flexSwitchCheckDefault"></label>';
+                        table_html += '</div></th></tr>';
                     }
                     table_html += '</tbody></table>';
                     $('#table_container').html(table_html);
                 };
+            });
+            
+            // Handler untuk form submit
+            $('form').submit(function (event) {
+                event.preventDefault(); // Mencegah form submit secara default
+                
+                // Mengambil nilai weights
+                var weights = [];
+                $('input[name="weights[]"]').each(function () {
+                    weights.push(parseFloat($(this).val()));
+                });
+                
+                // Mengambil nilai criteria
+                var criteria = [];
+                $('input[name="criteria[]"]').each(function () {
+                    var value = $(this).prop('checked') ? 1 : -1;
+                    criteria.push(value);
+                });
+                
+                // Mengirim data ke server menggunakan AJAX
+                $.ajax({
+                    url: '/upload',
+                    type: 'POST',
+                    data: {
+                        weights: weights,
+                        criteria: criteria
+                    },
+                    success: function (response) {
+                        // Menangani respon dari server (jika diperlukan)
+                    },
+                    error: function (error) {
+                        // Menangani kesalahan (jika diperlukan)
+                    }
+                });
             });
         });
     </script>
