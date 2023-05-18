@@ -2,14 +2,14 @@ import csv
 import numpy as np
 import pandas as pd
 import os
+import json
+import tempfile
 from flask import Flask, render_template, request
 from pymcdm import methods as mcdm_methods
 from pymcdm.methods import PROMETHEE_II
 from pymcdm import normalizations as norm
-import tempfile
 
 app = Flask(__name__)
-
 
 def csv_to_matrix(file):
     with open(file, 'r') as csv_file:
@@ -19,68 +19,83 @@ def csv_to_matrix(file):
     matrix = np.array(data, dtype=float)
     return matrix
 
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('upload.html')
 
-
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
-    
-    if 'csv_file' not in request.files:
-        return 'File CSV tidak diunggah', 400
-
-    file = request.files['csv_file']
     if request.method == 'POST':
-        file = request.files['csv_file']
-        if file:
-            # Simpan file ke tempat temporary, soale nek pake request.file bakal error (minta fileStorage)
-            temp_filepath = os.path.join(tempfile.gettempdir(), file.filename)
-            file.save(temp_filepath)
+            data = request.get_json()  # Mengambil data dalam format JSON
 
-            if(request.form['type'] == "vikor"):
-                print("vikor")
-                weights = list(map(float, request.form.getlist('weights[]')))
-                criteria = list(map(int, request.form.getlist('criteria[]')))
-                print("weight=",weights)
-                print("criteria=",criteria)
-                vikor_results = to_vikor(temp_filepath, weights, criteria)
-                # promethee_results = to_promethee(temp_filepath)
+            weights = data.get('weights', [])
+            criteria = data.get('criteria', [])
 
-                # Yang temporary tadi hapus
-                os.remove(temp_filepath)
+            # Ubah tipe data weights dan criteria menjadi float dan int
+            weights = [float(weight) for weight in weights]
+            criteria = [int(criterion) for criterion in criteria]
 
-                # hasil di print ke html
-                return render_template('result.html', results=vikor_results, name="Vikor")
-            elif(request.form["type"] == "topsis"):
-                print("prom")
-                weights = list(map(float, request.form.getlist('weights[]')))
-                criteria = list(map(int, request.form.getlist('criteria[]')))
-                topsis_results = to_topsis(temp_filepath, weights, criteria)
+            # Lakukan normalisasi jika diperlukan
+            weights = norm(weights)
 
-                # Yang temporary tadi hapus
-                os.remove(temp_filepath)
+            file = request.files['csv_file']
+   
+            if file:
+                # Simpan file ke tempat temporary, soale nek pake request.file bakal error (minta fileStorage)
+                temp_csv_filepath = os.path.join(tempfile.gettempdir(), file.filename)
+                file.save(temp_csv_filepath)
 
-                # hasil di print ke html
-                return render_template('result.html', results=topsis_results, name="topsis")
-            
-            elif(request.form["type"] == "promethee"):
-                print("asw")
-                weights = list(map(float, request.form.getlist('weights[]')))
-                criteria = list(map(int, request.form.getlist('criteria[]')))
-                promethee_results = to_promethee(temp_filepath, weights, criteria)
+                # Simpan data dalam bentuk dictionary
+                data = {
+                    'weights': weights,
+                    'criteria': criteria
+                }
+                
+                # Ubah data menjadi JSON string
+                json_data = json.dumps(data)
+
+                # Simpan JSON string ke tempat temporary yang berbeda
+                with tempfile.NamedTemporaryFile(mode='w', delete=False) as temp_file:
+                    temp_json_filepath = temp_file.name
+                    temp_file.write(json_data)
 
 
-                # Yang temporary tadi hapus
-                os.remove(temp_filepath)
+                if(request.form['type'] == "vikor"):
+                    print("vikor")
+                    vikor_results = to_vikor(temp_csv_filepath, weights, criteria)
+                    # promethee_results = to_promethee(temp_filepath)
 
-                # hasil di print ke html
-                return render_template('result.html', results=promethee_results, name="promethee")
+                    # Yang temporary tadi hapus
+                    os.remove(temp_csv_filepath)
 
-    # render tempat upload
-    return render_template('upload.html')
+                    # hasil di print ke html
+                    return render_template('result.html', results=vikor_results, name="Vikor")
+                elif(request.form["type"] == "topsis"):
+                    print("prom")
+                    topsis_results = to_topsis(temp_csv_filepath, weights, criteria)
 
+                    # Yang temporary tadi hapus
+                    os.remove(temp_csv_filepath)
+
+                    # hasil di print ke html
+                    return render_template('result.html', results=topsis_results, name="topsis")
+                
+                elif(request.form["type"] == "promethee"):
+                    print("asw")
+                    promethee_results = to_promethee(temp_csv_filepath, weights, criteria)
+
+                    # Yang temporary tadi hapus
+                    os.remove(temp_csv_filepath)
+
+                    # hasil di print ke html
+                    return render_template('result.html', results=promethee_results, name="promethee")
+                
+                # Hapus file temporary setelah selesai
+                os.remove(temp_csv_filepath)
+                os.remove(temp_json_filepath)
+                
+            # render tempat upload
+            return render_template('upload.html')
 
 def to_vikor(file, weights, criteria):
     matrix = csv_to_matrix(file)

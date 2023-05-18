@@ -78,10 +78,10 @@
     <div class="container">
         <h1>Multi Criteria Decision Making</h1>
         <h3>Kelompok Mantab</h3>
-        <form method="post" enctype="multipart/form-data" action="/upload">
+        <form id="myForm" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="csv_file">Select CSV file:</label>
-                <input type="file" name="csv_file" id="csv_file" accept=".csv" required>
+                <input type="file" name="csv_file" id="file1" accept=".csv" required>
             </div>
             <div class="form-group">
                 <input type="submit" value="vikor" name="type">
@@ -94,7 +94,7 @@
 
     <script>
         $(document).ready(function () {
-            $('#csv_file').on('change', function () {
+            $('#file1').on('change', function () {
                 var file = this.files[0];
                 var reader = new FileReader();
                 reader.readAsText(file);
@@ -120,7 +120,7 @@
             });
             
             // Handler untuk form submit
-            $('form').submit(function (event) {
+            $('#myForm').submit(function (event) {
                 event.preventDefault(); // Mencegah form submit secara default
                 
                 // Mengambil nilai weights
@@ -136,23 +136,26 @@
                     criteria.push(value);
                 });
                 
-                // Mengirim data ke server menggunakan AJAX
+                var formData = new FormData();
+                    formData.append('csv_file', $('#file1')[0].files[0]);
+                    formData.append('weights', JSON.stringify(weights));
+                    formData.append('criteria', JSON.stringify(criteria));
+
                 $.ajax({
                     url: '/upload',
                     type: 'POST',
-                    data: {
-                        weights: weights,
-                        criteria: criteria
-                    },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
                     success: function (response) {
-                        // Menangani respon dari server (jika diperlukan)
+                        // Handle server response if needed
                     },
                     error: function (error) {
-                        // Menangani kesalahan (jika diperlukan)
+                        // Handle error if needed
                     }
+                    });
                 });
             });
-        });
     </script>
 </body>
 
