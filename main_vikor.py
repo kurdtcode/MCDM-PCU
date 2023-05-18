@@ -44,7 +44,7 @@ def upload_file():
                 os.remove(temp_filepath)
 
                 # hasil di print ke html
-                return render_template('result.html', vikor_results=vikor_results)
+                return render_template('result.html', results=vikor_results, name="Vikor")
             elif(request.form["type"] == "promethee"):
                 print("prom")
                 promethee_results = to_promethee(temp_filepath)
@@ -54,7 +54,7 @@ def upload_file():
                 os.remove(temp_filepath)
 
                 # hasil di print ke html
-                return render_template('result.html', vikor_results=promethee_results)
+                return render_template('result.html', results=promethee_results, name="Promethee")
 
             # dibuat model vikor
 

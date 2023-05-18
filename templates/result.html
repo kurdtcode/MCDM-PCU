@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,28 +12,34 @@
             background-color: #f2f2f2;
             padding: 20px;
         }
+
         h1 {
             color: #333;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ccc;
         }
+
         th {
             background-color: #f2f2f2;
             font-weight: bold;
         }
     </style>
 </head>
+
 <body>
-    <h1>vikor_results</h1>
-    
+    <h1>{{name}} results</h1>
+
     <table>
         <thead>
             <tr>
@@ -46,7 +53,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for method, prefs in vikor_results.items() %}
+            {% for method, prefs in results.items() %}
             <tr>
                 <td>{{ method }}</td>
                 {% for pref in prefs %}
@@ -57,7 +64,7 @@
         </tbody>
     </table>
 
-    <h1>promethee_results</h1>
+    <!-- <h1>promethee_results</h1>
     
     <table>
         <thead>
@@ -67,10 +74,25 @@
                 <th>A2</th>
                 <th>A3</th>
                 <th>A4</th>
-                <th>A5</th>
-                <!-- Add more table headers if needed -->
-            </tr>
+                <th>A5</th> -->
+    <!-- Add more table headers if needed -->
+    <!-- </tr>
         </thead>
-    </table>
-</body> 
+    </table> -->
+</body>
+
+<script>
+    $(document).ready(function () {
+        $("#forTabel").click(function () {
+            $("#tabel").show();
+            $("#redis").hide();
+        })
+        $("#forRedis").click(function () {
+            $("#tabel").hide();
+            $("#redis").show();
+        })
+    });
+
+</script>
+
 </html>
