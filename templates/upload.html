@@ -78,7 +78,7 @@
     <div class="container">
         <h1>Multi Criteria Decision Making</h1>
         <h3>Kelompok Mantab</h3>
-        <form id="myForm" method="post" enctype="multipart/form-data">
+        <form id="myForm" method="post" enctype="multipart/form-data" action="/upload" onclick="getData()">
             <div class="form-group">
                 <label for="csv_file">Select CSV file:</label>
                 <input type="file" name="csv_file" id="file1" accept=".csv" required>
@@ -88,8 +88,9 @@
                 <input type="submit" value="topsis" name="type">
                 <input type="submit" value="promethee" name="type">
             </div>
+            <div id="table_container"></div>
         </form>
-        <div id="table_container"></div>
+
     </div>
 
     <script>
@@ -108,7 +109,7 @@
                     table_html += '<th>Cost/Benefit</th></tr>';
                     for (var i = 0; i < headers.length; i++) {
                         table_html += '<tr><th>' + headers[i] + '</th>';
-                        table_html += '<th><input type="number" name="weights[]" placeholder="Input Angka"></th>';
+                        table_html += '<th><input type="number" step="0.1" name="weights[]" placeholder="Input Angka"></th>';
                         table_html += '<th><div class="form-check form-switch">';
                         table_html += '<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="criteria[]" value="1">';
                         table_html += '<label class="form-check-label" for="flexSwitchCheckDefault"></label>';
@@ -116,46 +117,65 @@
                     }
                     table_html += '</tbody></table>';
                     $('#table_container').html(table_html);
-                };
-            });
-            
-            // Handler untuk form submit
-            $('#myForm').submit(function (event) {
-                event.preventDefault(); // Mencegah form submit secara default
-                
-                // Mengambil nilai weights
-                var weights = [];
-                $('input[name="weights[]"]').each(function () {
-                    weights.push(parseFloat($(this).val()));
-                });
-                
-                // Mengambil nilai criteria
-                var criteria = [];
-                $('input[name="criteria[]"]').each(function () {
-                    var value = $(this).prop('checked') ? 1 : -1;
-                    criteria.push(value);
-                });
-                
-                var formData = new FormData();
-                    formData.append('csv_file', $('#file1')[0].files[0]);
-                    formData.append('weights', JSON.stringify(weights));
-                    formData.append('criteria', JSON.stringify(criteria));
 
-                $.ajax({
-                    url: '/upload',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        // Handle server response if needed
-                    },
-                    error: function (error) {
-                        // Handle error if needed
-                    }
+                    // Atur nilai awal saat checkbox diubah
+                    $('input[type="checkbox"]').on('change', function () {
+                        if ($(this).is(':checked')) {
+                            $(this).val('1');
+                        } else {
+                            $(this).val('0');
+                        }
                     });
-                });
+                };
+
             });
+
+            // Handler untuk form submit
+            // $('#myForm').submit(function (event) {
+            //     event.preventDefault(); // Mencegah form submit secara default
+
+            //     // Mengambil nilai weights
+            //     var weights = [];
+            //     $('input[name="weights[]"]').each(function () {
+            //         weights.push(parseFloat($(this).val()));
+            //     });
+
+            //     // Mengambil nilai criteria
+            //     var criteria = [];
+            //     $('input[name="criteria[]"]').each(function () {
+            //         var value = $(this).prop('checked') ? 1 : -1;
+            //         criteria.push(value);
+            //     });
+
+            //     var formData = new FormData();
+            //     formData.append('csv_file', $('#file1')[0].files[0]);
+            //     formData.append('weights', JSON.stringify(weights));
+            //     formData.append('criteria', JSON.stringify(criteria));
+
+            // $.ajax({
+            //     url: '/upload',
+            //     type: 'POST',
+            //     data: formData,
+            //     contentType: false,
+            //     processData: false,
+            //     success: function (response) {
+            //         // Handle server response if needed
+            //     },
+            //     error: function (error) {
+            //         // Handle error if needed
+            //     }
+            // });
+        });
+        // });
+        $(document).ready(function () {
+            $('#flexSwitchCheckDefault').change(function () {
+                if (this.checked) {
+                    $('#flexSwitchCheckDefault').val(1);
+                } else {
+                    $('#flexSwitchCheckDefault').val(0);
+                }
+            });
+        });
     </script>
 </body>
 
