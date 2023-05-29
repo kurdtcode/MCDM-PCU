@@ -4,13 +4,13 @@ import pandas as pd
 import os
 import json
 import tempfile
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from pymcdm import methods as mcdm_methods
-from pymcdm.methods import PROMETHEE_II
 from pymcdm import normalizations as norm
+from flask import request, jsonify
 
 app = Flask(__name__)
-
+app.secret_key = 'your_secret_key'
 
 def csv_to_matrix(file):
     with open(file, 'r') as csv_file:
@@ -20,21 +20,28 @@ def csv_to_matrix(file):
     matrix = np.array(data, dtype=float)
     return matrix
 
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('upload.html')
 
+@app.route('/update-criteria', methods=['POST'])
+def update_criteria():
+    data = request.json
+    criteria = data.get('criteria', [])
+    # Do something with the criteria values
+    print(criteria)
+    session['criteria'] = criteria
+    
+    return jsonify(success=True)
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # data = request.get_json()  # Mengambil data dalam format JSON
-
-        # weights = data.get('weights', [])
-        # criteria = data.get('criteria', [])
+        criteria = session.get('criteria', [])
         weights = request.form.getlist('weights[]')
-        criteria = request.form.getlist('criteria[]')
+        # criteria = [1 if value == "1" else 0 for value in request.form.getlist('criteria[]') if value == "1"]
+        print("before= ",criteria)
 
         # Ubah tipe data weights dan criteria menjadi float dan int
         weights = [float(weight) for weight in weights]
