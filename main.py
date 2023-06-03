@@ -12,6 +12,7 @@ from flask import request, jsonify
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
+
 def csv_to_matrix(file):
     with open(file, 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
@@ -20,9 +21,11 @@ def csv_to_matrix(file):
     matrix = np.array(data, dtype=float)
     return matrix
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('upload.html')
+
 
 @app.route('/update-criteria', methods=['POST'])
 def update_criteria():
@@ -31,8 +34,9 @@ def update_criteria():
     # Do something with the criteria values
     print(criteria)
     session['criteria'] = criteria
-    
+
     return jsonify(success=True)
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -41,7 +45,7 @@ def upload_file():
         criteria = session.get('criteria', [])
         weights = request.form.getlist('weights[]')
         # criteria = [1 if value == "1" else 0 for value in request.form.getlist('criteria[]') if value == "1"]
-        print("before= ",criteria)
+        print("before= ", criteria)
 
         # Ubah tipe data weights dan criteria menjadi float dan int
         weights = [float(weight) for weight in weights]
@@ -105,9 +109,10 @@ def upload_file():
 
                 # Yang temporary tadi hapus
                 os.remove(temp_csv_filepath)
+                print(promethee_results)
 
                 # hasil di print ke html
-                return render_template('result.html', results=promethee_results, name="promethee")
+                # return render_template('result.html', results=promethee_results, name="promethee")
 
             # Hapus file temporary setelah selesai
             os.remove(temp_csv_filepath)
