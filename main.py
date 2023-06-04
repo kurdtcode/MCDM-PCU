@@ -87,6 +87,7 @@ def upload_file():
             if(request.form['type'] == "vikor"):
                 print("vikor")
                 vikor_results = to_vikor(matriks, weights, criteria)
+                best_choice = ""
                 # promethee_results = to_promethee(temp_filepath)
 
                 # Yang temporary tadi hapus
@@ -101,7 +102,9 @@ def upload_file():
                                 top5[i].append(sorted[i])
                                 continue
                     vikor_results["VIKOR"] = top5
-                    return render_template('result.html', results=vikor_results, name="Vikor")
+                    best_choice = top5[0][0]
+                    return render_template('result.html', results=vikor_results, name="Vikor", best=best_choice)
+                    
                 sorted = np.sort(vikor_results["VIKOR"])
                 top5 = [[] for _ in range(5)]
                 for i in range(5):
@@ -111,9 +114,9 @@ def upload_file():
                             top5[i].append(sorted[i])
                             continue
                 vikor_results["VIKOR"] = top5
-
+                best_choice = top5[0][0]
                 # hasil di print ke html
-                return render_template('result.html', results=vikor_results, name="Vikor")
+                return render_template('result.html', results=vikor_results, name="Vikor", best=best_choice)
             # elif(request.form["type"] == "topsis"):
             #     print("prom")
             #     topsis_results = to_topsis(
@@ -138,6 +141,7 @@ def upload_file():
             #     return render_template('result.html', results=promethee_results, name="promethee")
             elif(request.form["type"] == "SAW"):
                 SAW_results = to_SAW(matriks, weights, criteria)
+                best_choice = ""
                 if alter == []:
                     sorted = np.sort(SAW_results["SAW"])[::-1]
                     top5 = [[] for _ in range(5)]
@@ -148,7 +152,8 @@ def upload_file():
                                 top5[i].append(sorted[i])
                                 continue
                     SAW_results["SAW"] = top5
-                    return render_template('result.html', results=SAW_results, name="SAW")
+                    best_choice = top5[0][0]
+                    return render_template('result.html', results=SAW_results, name="SAW", best=best_choice)
                 sorted = np.sort(SAW_results["SAW"])[::-1]
                 top5 = [[] for _ in range(5)]
                 for i in range(5):
@@ -158,9 +163,11 @@ def upload_file():
                             top5[i].append(sorted[i])
                             continue
                 SAW_results["SAW"] = top5
-                os.remove(temp_csv_filepath)
+                os.remove(temp_csv_filepath)  
+
+                best_choice = top5[0][0]
                 # hasil di print ke html
-                return render_template('result.html', results=SAW_results, name="SAW")
+                return render_template('result.html', results=SAW_results, name="SAW", best=best_choice)
                 # SAW_results = SAW_results.tolist()
 
                 # Yang temporary tadi hapus
