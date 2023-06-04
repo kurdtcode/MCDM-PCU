@@ -13,7 +13,6 @@
             margin: 25px 25px;
         }
     </style>
-    </style>
 </head>
 
 <body>
@@ -22,7 +21,6 @@
         <table class="table table-striped ">
             <thead>
                 <tr>
-                    <th>Method</th>
                     <th>A1</th>
                     <th>A2</th>
                     <th>A3</th>
@@ -32,17 +30,16 @@
                 </tr>
             </thead>
             <tbody>
-                {% for method, prefs in results.items() %}
                 <tr>
-                    <td>{{ method }}</td>
-                    {% for pref in prefs %}
+                    <td>Results</td>
+                    {% for pref in results %}
                     <td>{{ pref }}</td>
                     {% endfor %}
                 </tr>
-                {% endfor %}
             </tbody>
         </table>
     </div>
+    
 
 
 
