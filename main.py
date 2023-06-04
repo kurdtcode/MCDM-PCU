@@ -44,7 +44,6 @@ def upload_file():
     if request.method == 'POST':
         # data = request.get_json()  # Mengambil data dalam format JSON
         # criteria = session.get('criteria', [])
-
         file = request.files['csv_file']
         print("methode post masuk")
 
@@ -57,7 +56,6 @@ def upload_file():
             berat = []
             kriteria = []
             weights = request.form.getlist('weights[]')
-            print(weights)
             for i in range(len(weights)):
                 print(i)
                 if float(weights[i]) != 0:
@@ -92,8 +90,8 @@ def upload_file():
 
             if(request.form['type'] == "vikor"):
                 print("vikor")
-                print(weights)
-                print(criteria)
+                # print(weights)
+                # print(criteria)
                 vikor_results = to_vikor(matriks, weights, criteria)
                 # promethee_results = to_promethee(temp_filepath)
 
@@ -129,6 +127,7 @@ def upload_file():
                 print(weights)
                 print(criteria)
                 SAW_results = to_SAW(matriks, weights, criteria)
+                print(SAW_results)
 
                 # Yang temporary tadi hapus
                 os.remove(temp_csv_filepath)
@@ -202,7 +201,7 @@ def to_SAW(file, weights, criteria):
         else:
             minmax.append("min")
 
-    rank = saw_method(matrix, minmax, weight)
+    rank = saw_method(matrix, minmax, weight, graph=False)
     return rank
 
 
