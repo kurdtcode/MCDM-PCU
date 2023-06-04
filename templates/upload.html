@@ -85,7 +85,9 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="vikor" name="type">
-                <input type="submit" value="saw" name="type">
+
+                <input type="submit" value="SAW" name="type">
+                <!-- <input type="submit" value="promethee" name="type"> -->
             </div>
             <div id="table_container"></div>
         </form>
@@ -110,7 +112,7 @@
                         table_html += '<tr><th>' + headers[i] + '</th>';
                         table_html += '<th><input type="number" step="0.01" name="weights[]" placeholder="Input Angka"></th>';
                         table_html += '<th><div class="form-check form-switch">';
-                        table_html += '<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="criteria[]" value="1" onchange="handleCheckboxChange()">';
+                        table_html += '<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault' + i + '" name="criteria' + i + '" value="1">';
                         table_html += '<label class="form-check-label" for="flexSwitchCheckDefault"></label>';
                         table_html += '</div></th></tr>';
                     }
@@ -119,35 +121,54 @@
                 };
             });
         });
-        
-        function handleCheckboxChange() {
-            var checkboxes = document.querySelectorAll('input[name="criteria[]"]');
-            var checkedValues = [];
-          
-            checkboxes.forEach(function(checkbox) {
-              if (checkbox.checked) {
-                checkedValues.push(1);
-              } else {
-                checkedValues.push(0);
-              }
-            });
-          
-            console.log(checkedValues);
-          
-            // Make an AJAX request to the server
-            $.ajax({
-              type: "POST",
-              url: "/update-criteria",
-              contentType: "application/json",
-              data: JSON.stringify({ criteria: checkedValues }),
-              success: function(response) {
-                console.log("Checked values sent to the server");
-              },
-              error: function(error) {
-                console.error("Error sending checked values to the server");
-              }
-            });
-          }
+        // function handleCheckboxChange() {
+        //     var checkboxes = document.querySelectorAll('input[name="criteria[]"]');
+        //     var checkedValues = [];
+
+        //     checkboxes.forEach(function (checkbox) {
+        //         if (checkbox.checked) {
+        //             checkedValues.push(1);
+        //         } else {
+        //             checkedValues.push(0);
+        //         }
+        //     });
+
+        //     console.log(checkedValues);
+
+        //     // Make an AJAX request to the server
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/update-criteria",
+        //         contentType: "application/json",
+        //         data: JSON.stringify({ criteria: checkedValues }),
+        //         success: function (response) {
+        //             console.log("Checked values sent to the server");
+        //         },
+        //         error: function (error) {
+        //             console.error("Error sending checked values to the server");
+        //         }
+        //     });
+        // }
+        function disableInput(angka) {
+
+            var inputField = document.getElementById('berat' + angka);
+            var simbol = document.getElementById('sim' + angka);
+            var cekbok = document.getElementById('flexSwitchCheckDefault' + angka);
+            if (inputField.hidden) {
+                inputField.hidden = false;
+                cekbok.disabled = false;
+                simbol.className = 'fa-sharp fa-solid fa-square-xmark fa-lg';
+                simbol.style = 'color: #c10606;';
+            }
+            else {
+                inputField.hidden = true;
+                cekbok.disabled = true;
+                simbol.className = 'fa-sharp fa-solid fa-square-check fa-lg';
+                simbol.style = 'color: #0d9b03;'
+            }
+
+        }
+
     </script>
 </body>
 
