@@ -92,7 +92,7 @@ def upload_file():
                 # Yang temporary tadi hapus
                 os.remove(temp_csv_filepath)
                 if alter == []:
-                    sorted = np.sort(vikor_results["VIKOR"])[::-1]
+                    sorted = np.sort(vikor_results["VIKOR"])
                     top5 = [[] for _ in range(5)]
                     for i in range(5):
                         for k in range(len(vikor_results["VIKOR"])):
@@ -102,7 +102,7 @@ def upload_file():
                                 continue
                     vikor_results["VIKOR"] = top5
                     return render_template('result.html', results=vikor_results, name="Vikor")
-                sorted = np.sort(vikor_results["VIKOR"])[::-1]
+                sorted = np.sort(vikor_results["VIKOR"])
                 top5 = [[] for _ in range(5)]
                 for i in range(5):
                     for k in range(len(vikor_results["VIKOR"])):
