@@ -19,7 +19,7 @@ def csv_to_matrix(file):
         csv_reader = csv.reader(csv_file)
         header = next(csv_reader)
         data = list(csv_reader)
-    matrix = np.array(data, dtype=float)
+    matrix = np.array(data)
     return matrix
 
 
@@ -33,7 +33,6 @@ def update_criteria():
     data = request.json
     criteria = data.get('criteria', [])
     # Do something with the criteria values
-    print(criteria)
     session['criteria'] = criteria
 
     return jsonify(success=True)
@@ -45,7 +44,6 @@ def upload_file():
         # data = request.get_json()  # Mengambil data dalam format JSON
         # criteria = session.get('criteria', [])
         file = request.files['csv_file']
-        print("methode post masuk")
 
         if file:
             # Simpan file ke tempat temporary, soale nek pake request.file bakal error (minta fileStorage)
@@ -55,9 +53,9 @@ def upload_file():
             matriks = np.array(csv_to_matrix(temp_csv_filepath))
             berat = []
             kriteria = []
+            alter = []
             weights = request.form.getlist('weights[]')
             for i in range(len(weights)):
-                print(i)
                 if float(weights[i]) != 0:
                     berat.append(float(weights[i]))
                     if request.form.get('criteria'+str(i)) == None:
@@ -65,13 +63,13 @@ def upload_file():
                     else:
                         kriteria.append(1)
                 else:
+                    alter = matriks[:, i]
                     matriks = np.delete(matriks, i, axis=1)
 
-            print(matriks)
+            matriks = np.array(matriks, dtype=float)
+
             weights = berat
             criteria = kriteria
-            print(weights)
-            print(criteria)
             # Simpan data dalam bentuk dictionary
             data = {
                 'weights': weights,
@@ -86,17 +84,33 @@ def upload_file():
                 temp_json_filepath = temp_file.name
                 temp_file.write(json_data)
 
-            print("file masuk")
-
             if(request.form['type'] == "vikor"):
                 print("vikor")
-                # print(weights)
-                # print(criteria)
                 vikor_results = to_vikor(matriks, weights, criteria)
                 # promethee_results = to_promethee(temp_filepath)
 
                 # Yang temporary tadi hapus
                 os.remove(temp_csv_filepath)
+                if alter == []:
+                    sorted = np.sort(vikor_results["VIKOR"])[::-1]
+                    top5 = [[] for _ in range(5)]
+                    for i in range(5):
+                        for k in range(len(vikor_results["VIKOR"])):
+                            if sorted[i] == vikor_results["VIKOR"][k]:
+                                top5[i].append("Alternatif " + str(k+1))
+                                top5[i].append(sorted[i])
+                                continue
+                    vikor_results["VIKOR"] = top5
+                    return render_template('result.html', results=vikor_results, name="Vikor")
+                sorted = np.sort(vikor_results["VIKOR"])[::-1]
+                top5 = [[] for _ in range(5)]
+                for i in range(5):
+                    for k in range(len(vikor_results["VIKOR"])):
+                        if sorted[i] == vikor_results["VIKOR"][k]:
+                            top5[i].append(alter[k])
+                            top5[i].append(sorted[i])
+                            continue
+                vikor_results["VIKOR"] = top5
 
                 # hasil di print ke html
                 return render_template('result.html', results=vikor_results, name="Vikor")
@@ -123,15 +137,33 @@ def upload_file():
             #     # hasil di print ke html
             #     return render_template('result.html', results=promethee_results, name="promethee")
             elif(request.form["type"] == "SAW"):
-                print("SAW")
-                print(weights)
-                print(criteria)
                 SAW_results = to_SAW(matriks, weights, criteria)
-                print(SAW_results)
+                if alter == []:
+                    sorted = np.sort(SAW_results["SAW"])[::-1]
+                    top5 = [[] for _ in range(5)]
+                    for i in range(5):
+                        for k in range(len(SAW_results["SAW"])):
+                            if sorted[i] == SAW_results["SAW"][k]:
+                                top5[i].append("Alternatif "+str(k+1))
+                                top5[i].append(sorted[i])
+                                continue
+                    SAW_results["SAW"] = top5
+                    return render_template('result.html', results=SAW_results, name="SAW")
+                sorted = np.sort(SAW_results["SAW"])[::-1]
+                top5 = [[] for _ in range(5)]
+                for i in range(5):
+                    for k in range(len(SAW_results["SAW"])):
+                        if sorted[i] == SAW_results["SAW"][k]:
+                            top5[i].append(alter[k])
+                            top5[i].append(sorted[i])
+                            continue
+                SAW_results["SAW"] = top5
+                os.remove(temp_csv_filepath)
+                # hasil di print ke html
+                return render_template('result.html', results=SAW_results, name="SAW")
+                # SAW_results = SAW_results.tolist()
 
                 # Yang temporary tadi hapus
-                os.remove(temp_csv_filepath)
-                return render_template('result.html', results=SAW_results, name="SAW")
 
                 # Hapus file temporary setelah selesai
             os.remove(temp_csv_filepath)
@@ -147,9 +179,9 @@ def to_vikor(file, weights, criteria):
     criteria = np.array(criteria)
     vikor_methods = {
         'VIKOR': mcdm_methods.VIKOR(),
-        'MINMAX': mcdm_methods.VIKOR(norm.minmax_normalization),
-        'MAX': mcdm_methods.VIKOR(norm.max_normalization),
-        'SUM': mcdm_methods.VIKOR(norm.sum_normalization)
+        # 'MINMAX': mcdm_methods.VIKOR(norm.minmax_normalization),
+        # 'MAX': mcdm_methods.VIKOR(norm.max_normalization),
+        # 'SUM': mcdm_methods.VIKOR(norm.sum_normalization)
     }
     vikor_results = {}
     for name, function in vikor_methods.items():
@@ -202,7 +234,10 @@ def to_SAW(file, weights, criteria):
             minmax.append("min")
 
     rank = saw_method(matrix, minmax, weight, graph=False)
-    return rank
+    print(rank)
+    results = {}
+    results['SAW'] = rank[:, 1]
+    return results
 
 
 if __name__ == '__main__':
