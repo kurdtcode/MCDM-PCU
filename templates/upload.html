@@ -10,20 +10,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/eb458ff7d5.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-
     <title>MCDM APP</title>
     <style>
         body {
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Bebas Neue', cursive;
             background-image: linear-gradient(to right, #360033, #0b8793, #2c9317);
-            padding: 20px;
+            padding: 30px; /* Update padding */
+            letter-spacing: 1px;
+            font-size: 18px; /* Update font size */
         }
-
+        label {
+            font-family: 'Bebas Neue', regular;
+        }
+        h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 64px; /* Update font size */
+            font-weight: 600;
+            z-index:10;
+            position:relative;
+        }
         .container {
-            max-width: 800px;
+            max-width: 1000px; /* Update max-width */
             margin: 0 auto;
             background-color: #000;
-            padding: 20px;
+            padding: 30px; /* Update padding */
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
@@ -79,6 +89,7 @@
         .navbar {
             background-color: rgba(0, 0, 0, 0.9);
         }
+        
 
         .nav-link,
         .navbar-brand {
@@ -110,30 +121,22 @@
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-chart-pie text-primary"></i> MCDM App
+                <i class="fas fa-chart-pie fa-2x text-primary" style="margin-right: 1rem;"></i> 
+                <span style="font-size: 2.5rem;">MCDM App</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container mt-5">
-        <h1 class="text-primary">Multi Criteria Decision Making</h1>
-        <h3 class="text-info">Kelompok 3</h3>
+        <h1 class="text-primary" style=" margin-bottom: 0;line-height: 1">Multi Criteria Decision Making</h1>
+        <h3 class="text-info" style=" margin-top: 0;line-height: 1">Kelompok 3</h3>        
         <form id="myForm" method="post" enctype="multipart/form-data" action="/upload">
             <div class="mb-3">
                 <label for="csv_file" class="form-label text-white"><i class="fas fa-file-csv"></i> Select CSV file:</label>
