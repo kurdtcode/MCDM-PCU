@@ -10,6 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/eb458ff7d5.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
     <title>MCDM APP</title>
     <style>
         body {
@@ -114,16 +116,58 @@
         .form-control:focus {
             background-color: rgba(255, 255, 255, 0.3);
         }
+
+              
+        .background-left {
+            justify-content: space-between;
+            display: flex;
+            top: 53%;
+            left: 3%;
+            position: absolute;
+            width: 20%;
+            height: 40%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: -1;
+            transform: translateY(-70%);
+        }
+        .background-right {
+            justify-content: space-between;
+            display: flex;
+            top: 53%;
+            left: 77%;
+            position: absolute;
+            width: 20%;
+            height: 40%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: -1;
+            transform: translateY(-70%);
+        }
+
+        .background-left {
+            background-image: url('https://drive.google.com/uc?export=view&id=1l27vnySlT8yR0Q7SSMBQ4VCP6lbv9XJ9');
+        }
+        .background-right {
+            background-image: url('https://drive.google.com/uc?export=view&id=1l27vnySlT8yR0Q7SSMBQ4VCP6lbv9XJ9');
+        }
+
+
     </style>
 </head>
 
-<body>
+<body> 
+    <div class="background-container">
+        <div class="background-image background-left"></div>
+        <div class="background-image background-right"></div>
+    </div>
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <i class="fas fa-chart-pie fa-2x text-primary" style="margin-right: 1rem;"></i> 
                 <span style="font-size: 2.5rem;">MCDM App</span>
             </a>
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -135,6 +179,7 @@
     </nav>
 
     <div class="container mt-5">
+        
         <h1 class="text-primary" style=" margin-bottom: 0;line-height: 1">Multi Criteria Decision Making</h1>
         <h3 class="text-info" style=" margin-top: 0;line-height: 1">Kelompok 3</h3>        
         <form id="myForm" method="post" enctype="multipart/form-data" action="/upload">
