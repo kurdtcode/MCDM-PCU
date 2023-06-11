@@ -104,7 +104,7 @@ def upload_file():
                     vikor_results["VIKOR"] = top5
                     best_choice = top5[0][0]
                     return render_template('result.html', results=vikor_results, name="Vikor", best=best_choice)
-                    
+
                 sorted = np.sort(vikor_results["VIKOR"])
                 top5 = [[] for _ in range(5)]
                 for i in range(5):
@@ -145,13 +145,14 @@ def upload_file():
                 if alter == []:
                     sorted = np.sort(SAW_results["SAW"])[::-1]
                     top5 = [[] for _ in range(5)]
-                    for i in range(5):
+                    for j in range(5):
                         for k in range(len(SAW_results["SAW"])):
-                            if sorted[i] == SAW_results["SAW"][k]:
-                                top5[i].append("Alternatif "+str(k+1))
-                                top5[i].append(sorted[i])
+                            if sorted[j] == SAW_results["SAW"][k]:
+                                top5[j].append("Alternatif "+str(k+1))
+                                top5[j].append(sorted[j])
                                 continue
                     SAW_results["SAW"] = top5
+                    print(top5)
                     best_choice = top5[0][0]
                     return render_template('result.html', results=SAW_results, name="SAW", best=best_choice)
                 sorted = np.sort(SAW_results["SAW"])[::-1]
@@ -163,7 +164,7 @@ def upload_file():
                             top5[i].append(sorted[i])
                             continue
                 SAW_results["SAW"] = top5
-                os.remove(temp_csv_filepath)  
+                os.remove(temp_csv_filepath)
 
                 best_choice = top5[0][0]
                 # hasil di print ke html
