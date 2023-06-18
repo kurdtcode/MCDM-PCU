@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import json
 import tempfile
+from sklearn import preprocessing
 from flask import Flask, render_template, request, session
 from pymcdm import methods as mcdm_methods
 from pymcdm import normalizations as norm
@@ -55,6 +56,13 @@ def upload_file():
             kriteria = []
             alter = []
             weights = request.form.getlist('weights[]')
+            weights = np.array(weights, dtype=float)
+            isi = 0
+            for i in weights:
+                isi += i
+            for k in range(len(weights)):
+                weights[k] = weights[k]/isi
+
             for i in range(len(weights)):
                 if float(weights[i]) != 0:
                     berat.append(float(weights[i]))

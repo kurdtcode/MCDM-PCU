@@ -11,7 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/eb458ff7d5.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
 
@@ -39,24 +40,24 @@
             font-weight: bold;
             border-radius: 5px;
             margin-bottom: 5px;
-            position:relative;
+            position: relative;
         }
 
         .particles {
-            position:absolute;
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
-            z-index:-1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
 
         h1 {
             font-family: 'Bebas Neue', cursive;
             font-size: 90px;
             font-weight: 600;
-            z-index:10;
-            position:relative;
+            z-index: 10;
+            position: relative;
         }
 
         .result-table {
@@ -74,8 +75,8 @@
             font-weight: bold;
             font-size: 40px;
             color: #0b8793;
-        }        
-        
+        }
+
         td {
             font-weight: regular;
             font-size: 30px;
@@ -108,22 +109,29 @@
             margin-right: 10px;
             color: #ffe600;
         }
-
     </style>
 </head>
 
 <body>
-    <audio autoplay>
+    <!-- <audio autoplay>
         <source src="https://drive.google.com/uc?export=view&id=1EAwzEyMd9bzxL1Fs490l8nM0kdvFANr5" type="audio/mp3">
-    </audio>
+    </audio> -->
     <div class="container">
         <div class="header">
             <h1>{{name}} Results</h1>
             <div class="particles">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cog_icon_white.svg/240px-Cog_icon_white.svg.png" alt="Cog Icon" style="position:absolute; top:5%; left:5%; width: 40px; height: 40px; transform:rotate(45deg); opacity:0.3;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cog_icon_white.svg/240px-Cog_icon_white.svg.png" alt="Cog Icon" style="position:absolute; bottom:5%; right:5%; width: 80px; height: 80px; transform:rotate(-45deg); opacity:0.3;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Microchip_simple_icon.svg/200px-Microchip_simple_icon.svg.png" alt="Microchip Icon" style="position:absolute; top:5%; right:20%; width: 90px; height: 90px; transform:rotate(-15deg); opacity:0.3;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Microchip_simple_icon.svg/200px-Microchip_simple_icon.svg.png" alt="Microchip Icon" style="position:absolute; bottom:5%; left:20%; width: 40px; height: 40px; transform:rotate(15deg); opacity:0.3;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cog_icon_white.svg/240px-Cog_icon_white.svg.png"
+                    alt="Cog Icon"
+                    style="position:absolute; top:5%; left:5%; width: 40px; height: 40px; transform:rotate(45deg); opacity:0.3;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cog_icon_white.svg/240px-Cog_icon_white.svg.png"
+                    alt="Cog Icon"
+                    style="position:absolute; bottom:5%; right:5%; width: 80px; height: 80px; transform:rotate(-45deg); opacity:0.3;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Microchip_simple_icon.svg/200px-Microchip_simple_icon.svg.png"
+                    alt="Microchip Icon"
+                    style="position:absolute; top:5%; right:20%; width: 90px; height: 90px; transform:rotate(-15deg); opacity:0.3;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Microchip_simple_icon.svg/200px-Microchip_simple_icon.svg.png"
+                    alt="Microchip Icon"
+                    style="position:absolute; bottom:5%; left:20%; width: 40px; height: 40px; transform:rotate(15deg); opacity:0.3;">
             </div>
         </div>
     </div>
@@ -153,10 +161,10 @@
         <div class="best-result">
             <i class="fas fa-trophy"></i> Best result is {{ best }}
         </div>
-        <div class="additional-info" style="text-align: center;">
+        <!-- <div class="additional-info" style="text-align: center;">
             <p style="color: #fff; font-size: 50px;">DONE GAK NI BOS</p>
             <img src="https://drive.google.com/uc?id=1fUD5M1SWsILYNMg1dC2Hp31s6MHvuHrj" alt="chill lah" style="width: 500px; height: auto; margin-bottom: 20px;">
-        </div>
+        </div> -->
     </div>
 </body>
 
